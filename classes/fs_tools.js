@@ -3,7 +3,7 @@ const COMMON = require("./common.js");
 
 class fs_tools extends COMMON {
   // ############################
-  // File Writer Class
+  // File System Tools Class
   // ---
   // Provides common tools for reading and writing to the file system.
   // ############################
