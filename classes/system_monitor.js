@@ -1,27 +1,22 @@
-const COMMON = require("./common.js");
+// ############################
+// System Monitor Class
+// ---
+// Provides mechanisms to return various system stats.
+// ############################
 
-class system_monitor extends COMMON {
+function display_memory() {
   // ############################
-  // System Monitor Class
+  // display_memory - public
   // ---
-  // Provides mechanisms to return various system stats.
+  // Queries Node for current amount of ram being consumed by script
+  // ---
+  // NA
+  // ---
+  // Returns: int - memory in Mb
   // ############################
 
-  display_memory() {
-    // ############################
-    // display_memory - public
-    // ---
-    // Queries Node for current amount of ram being consumed by script
-    // ---
-    // NA
-    // ---
-    // Returns: int - memory in Mb
-    // ############################
-
-    const memory_used = process.memoryUsage().heapUsed / 1024 / 1024;
-    if (this.debug) this.write_to_console(memory_used, "display_memory");
-    return this.sucess("", memory_used);
-  }
+  const memory_used = process.memoryUsage().heapUsed / 1024 / 1024;
+  return this.sucess("", memory_used);
 }
 
-module.exports = system_monitor;
+module.exports = display_memory;
