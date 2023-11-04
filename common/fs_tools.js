@@ -1,16 +1,26 @@
 const fs = require("fs");
 
-class file_system_tools {
+class response_messages {
+  constructor() {}
+  error(message) {
+    return { success: false, message: message };
+  }
+  success(message, data) {
+    return { success: true, message: message, data: data };
+  }
+}
+
+class file_system_tools extends response_messages {
   get_files(directory, filter) {
     return new Promise(async (resolve, reject) => {
       const FILES = [];
       try {
         fs.readdir(directory, function (error, files) {
           if (error) {
-            reject(error);
+            reject(this.error(error));
           }
           if (files.length === 0) {
-            reject(error);
+            reject(this.error(error));
           }
           if (filter) {
             files.forEach((file, id) => {
@@ -18,14 +28,14 @@ class file_system_tools {
               if (FILE_EXTENSION == filter) {
                 FILES.push(file);
               }
-              if (id === FILES.length - 1) resolve(FILES);
+              if (id === FILES.length - 1) resolve(this.success("", FILES));
             });
           } else {
-            resolve(FILES);
+            resolve(this.success("", FILES));
           }
         });
       } catch (error) {
-        reject(error);
+        reject(this.error(error));
       }
     });
   }
@@ -35,12 +45,12 @@ class file_system_tools {
       try {
         fs.readFile(file_name, "utf8", async (error, data) => {
           if (error) {
-            reject(error);
+            reject(this.error(error));
           }
-          resolve(error);
+          resolve(this.success("", data));
         });
       } catch (error) {
-        reject(error);
+        reject(this.error(error));
       }
     });
   }
@@ -50,12 +60,12 @@ class file_system_tools {
       try {
         fs.writeFile(file_name, data, (error) => {
           if (error) {
-            reject(error);
+            reject(this.error(error));
           }
-          resolve(true);
+          resolve(this.success());
         });
       } catch (error) {
-        reject(error);
+        reject(this.error(error));
       }
     });
   }
@@ -65,12 +75,12 @@ class file_system_tools {
       try {
         fs.appendFile(file_name, data, async (error) => {
           if (error) {
-            reject(error);
+            reject(this.error(error));
           }
-          resolve(true);
+          resolve(this.success());
         });
       } catch (error) {
-        reject(error);
+        reject(this.error(error));
       }
     });
   }

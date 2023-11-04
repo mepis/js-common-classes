@@ -1,37 +1,62 @@
-class csv_parser {
+class response_messages {
+  constructor() {}
+  error(message) {
+    return { success: false, message: message };
+  }
+  success(message, data) {
+    return { success: true, message: message, data: data };
+  }
+}
+
+class csv_parser extends response_messages {
   filter_csv(csv, filters) {
-    let matches = ``;
-    const ORIGINAL_DATA = csv.split("\n");
-    ORIGINAL_DATA.forEach((line) => {
-      filters.forEach((filter) => {
-        if (line.includes(filter)) {
-          matches = `${matches}${line}, \n`;
-        }
+    return new Promise((resolve, reject) => {
+      const CSV_DATA_TYPE = typeof csv;
+      const FILTER_DATA_TYPE = Array.isArray(filters);
+
+      if (CSV_DATA_TYPE !== "string")
+        reject(this.error("CSV is invalid type, expected string"));
+      if (!FILTER_DATA_TYPE)
+        reject(this.error("filters is invalid data type, expected array"));
+
+      let matches = ``;
+      const ORIGINAL_DATA = csv.split("\n");
+      ORIGINAL_DATA.forEach((line) => {
+        filters.forEach((filter) => {
+          if (line.includes(filter)) {
+            matches = `${matches}${line}, \n`;
+          }
+        });
       });
+      resolve(this.success("", matches));
     });
-    return matches;
   }
 
   async convert_csv_to_object(csv) {
     return new Promise(async (resolve) => {
-      const LINES = await this.normalize_lines(csv.split("\n"));
-      const FIXED_LINES = LINES.filter((x) => x !== "" || x !== undefined);
-      const HEADER = await this.convert_headers(FIXED_LINES);
-      let output = LINES.slice(1).map((line) => {
-        const fields = line.split(",");
-        const fixed_fields = fields.map((element) => {
-          if (element === "") {
-            return "-";
-          }
-          return element;
+      const DATA_TYPE = typeof csv;
+      if (DATA_TYPE === "string") {
+        const LINES = await this.normalize_lines(csv.split("\n"));
+        const FIXED_LINES = LINES.filter((x) => x !== "" || x !== undefined);
+        const HEADER = await this.convert_headers(FIXED_LINES);
+        let output = LINES.slice(1).map((line) => {
+          const fields = line.split(",");
+          const fixed_fields = fields.map((element) => {
+            if (element === "") {
+              return "-";
+            }
+            return element;
+          });
+          const response = Object.fromEntries(
+            HEADER.map((h, i) => [h, fixed_fields[i]])
+          );
+          return response;
         });
-        const response = Object.fromEntries(
-          HEADER.map((h, i) => [h, fixed_fields[i]])
-        );
-        return response;
-      });
-      output = await this.fix_bools(output);
-      resolve(output);
+        output = await this.fix_bools(output);
+        resolve(this.success("", output));
+      } else {
+        reject(this.error("Invalid data type, expected string"));
+      }
     });
   }
 
