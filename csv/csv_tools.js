@@ -8,6 +8,8 @@ class response_messages {
   }
 }
 
+new response_messages();
+
 class csv_parser extends response_messages {
   filter_csv(csv, filters) {
     return new Promise((resolve, reject) => {
