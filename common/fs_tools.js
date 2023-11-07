@@ -9,8 +9,6 @@ class response_messages {
     return { success: true, message: message, data: data };
   }
 }
-var response = new response_messages();
-
 class file_system_tools extends response_messages {
   get_files(directory, filter) {
     return new Promise(async (resolve, reject) => {
@@ -18,10 +16,10 @@ class file_system_tools extends response_messages {
       try {
         fs.readdir(directory, function (error, files) {
           if (error) {
-            reject(response.error(error));
+            reject(this.error(error));
           }
           if (files.length === 0) {
-            reject(response.error(error));
+            reject(this.error(error));
           }
           if (filter) {
             files.forEach((file, id) => {
@@ -29,14 +27,14 @@ class file_system_tools extends response_messages {
               if (FILE_EXTENSION == filter) {
                 FILES.push(file);
               }
-              if (id === FILES.length - 1) resolve(response.success("", files));
+              if (id === FILES.length - 1) resolve(this.success("", files));
             });
           } else {
-            resolve(response.success("", files));
+            resolve(this.success("", files));
           }
         });
       } catch (error) {
-        reject(response.error(error));
+        reject(this.error(error));
       }
     });
   }
@@ -46,12 +44,12 @@ class file_system_tools extends response_messages {
       try {
         fs.readFile(file_name, "utf8", async (error, data) => {
           if (error) {
-            reject(response.error(error));
+            reject(this.error(error));
           }
-          resolve(response.success("", data));
+          resolve(this.success("", data));
         });
       } catch (error) {
-        reject(response.error(error));
+        reject(this.error(error));
       }
     });
   }
@@ -61,12 +59,12 @@ class file_system_tools extends response_messages {
       try {
         fs.writeFile(file_name, data, (error) => {
           if (error) {
-            reject(response.error(error));
+            reject(this.error(error));
           }
-          resolve(response.success());
+          resolve(this.success());
         });
       } catch (error) {
-        reject(response.error(error));
+        reject(this.error(error));
       }
     });
   }
@@ -76,12 +74,12 @@ class file_system_tools extends response_messages {
       try {
         fs.appendFile(file_name, data, async (error) => {
           if (error) {
-            reject(response.error(error));
+            reject(this.error(error));
           }
-          resolve(response.success());
+          resolve(this.success());
         });
       } catch (error) {
-        reject(response.error(error));
+        reject(this.error(error));
       }
     });
   }
