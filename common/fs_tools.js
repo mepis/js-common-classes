@@ -9,6 +9,9 @@ class response_messages {
     return { success: true, message: message, data: data };
   }
 }
+
+new response_messages();
+
 class file_system_tools extends response_messages {
   get_files(directory, filter) {
     return new Promise(async (resolve, reject) => {
