@@ -10,19 +10,19 @@ class response_messages {
   }
 }
 
-new response_messages();
+const RESPONSE_MESSAGES = new response_messages();
 
-class file_system_tools extends response_messages {
+class file_system_tools {
   get_files(directory, filter) {
     return new Promise(async (resolve, reject) => {
       const FILES = [];
       try {
         fs.readdir(directory, function (error, files) {
           if (error) {
-            reject(this.error(error));
+            reject(RESPONSE_MESSAGES.error(error));
           }
           if (files.length === 0) {
-            reject(this.error(error));
+            reject(RESPONSE_MESSAGES.error(error));
           }
           if (filter) {
             files.forEach((file, id) => {
@@ -30,14 +30,15 @@ class file_system_tools extends response_messages {
               if (FILE_EXTENSION == filter) {
                 FILES.push(file);
               }
-              if (id === FILES.length - 1) resolve(this.success("", files));
+              if (id === FILES.length - 1)
+                resolve(RESPONSE_MESSAGES.success("", files));
             });
           } else {
-            resolve(this.success("", files));
+            resolve(RESPONSE_MESSAGES.success("", files));
           }
         });
       } catch (error) {
-        reject(this.error(error));
+        reject(RESPONSE_MESSAGES.error(error));
       }
     });
   }
@@ -47,12 +48,12 @@ class file_system_tools extends response_messages {
       try {
         fs.readFile(file_name, "utf8", async (error, data) => {
           if (error) {
-            reject(this.error(error));
+            reject(RESPONSE_MESSAGES.error(error));
           }
-          resolve(this.success("", data));
+          resolve(RESPONSE_MESSAGES.success("", data));
         });
       } catch (error) {
-        reject(this.error(error));
+        reject(RESPONSE_MESSAGES.error(error));
       }
     });
   }
@@ -62,12 +63,12 @@ class file_system_tools extends response_messages {
       try {
         fs.writeFile(file_name, data, (error) => {
           if (error) {
-            reject(this.error(error));
+            reject(RESPONSE_MESSAGES.error(error));
           }
-          resolve(this.success());
+          resolve(RESPONSE_MESSAGES.success());
         });
       } catch (error) {
-        reject(this.error(error));
+        reject(RESPONSE_MESSAGES.error(error));
       }
     });
   }
@@ -77,12 +78,12 @@ class file_system_tools extends response_messages {
       try {
         fs.appendFile(file_name, data, async (error) => {
           if (error) {
-            reject(this.error(error));
+            reject(RESPONSE_MESSAGES.error(error));
           }
-          resolve(this.success());
+          resolve(RESPONSE_MESSAGES.success());
         });
       } catch (error) {
-        reject(this.error(error));
+        reject(RESPONSE_MESSAGES.error(error));
       }
     });
   }
