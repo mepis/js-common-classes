@@ -62,7 +62,7 @@ class csv_parser extends response_messages {
     });
   }
 
-  static convert_headers(lines) {
+  convert_headers(lines) {
     return new Promise((resolve) => {
       let header = lines[0].split(",");
       for (let x = 0; x < header.length; x++) {
@@ -75,7 +75,7 @@ class csv_parser extends response_messages {
     });
   }
 
-  static normalize_lines(lines) {
+  normalize_lines(lines) {
     return new Promise((resolve) => {
       for (let x = 0; x < lines.length; x++) {
         lines[x] = lines[x].replace(/["|']/g, "");
@@ -85,7 +85,7 @@ class csv_parser extends response_messages {
     });
   }
 
-  static fix_bools(output) {
+  fix_bools(output) {
     return new Promise((resolve) => {
       for (let x = 0; x < output.length; x++) {
         const keys = Object.keys(output[x]);
